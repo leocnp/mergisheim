@@ -18,10 +18,11 @@ pull_request_rules:
   - name: dispatch a gha
     conditions:
       - label=gha
-    github_actions:
-      workflow:
-        dispatch:
-          - workflow: phwes/simple_hello_world@v1
-#            inputs:
-#              name: steve
-#              age: 42
+    actions:
+      github_actions:
+        workflow:
+          dispatch:
+            - workflow: phwes/simple_hello_world@v1
+  #            inputs:
+  #              name: steve
+  #              age: 42
