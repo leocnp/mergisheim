@@ -14,3 +14,14 @@ pull_request_rules:
       request_reviews:
         users:
           - lecrepont02
+
+  - name: dispatch a gha
+    conditions:
+      - label=gha
+    github_actions:
+      workflow:
+        dispatch:
+          - workflow: phwes/simple_hello_world@v1
+#            inputs:
+#              name: steve
+#              age: 42
