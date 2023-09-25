@@ -1,0 +1,13 @@
+---
+name: conflicts_resolver
+
+on:
+  workflow_dispatch:
+
+jobs:
+  resolve_conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: resolve
+        run: echo "Hello world from my workflow!"
+#        uses: mergifyio/conflicts_resolver

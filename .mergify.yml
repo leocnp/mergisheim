@@ -15,14 +15,14 @@ pull_request_rules:
         users:
           - lecrepont02
 
-  - name: dispatch a gha
+  - name: dispatch gha workflow
     conditions:
       - label=gha
     actions:
       github_actions:
         workflow:
           dispatch:
-            - workflow: phwes/simple_hello_world@v1
+            - workflow: conflicts_resolver.yaml
   #            inputs:
   #              name: steve
   #              age: 42
