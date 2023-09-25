@@ -8,6 +8,7 @@ jobs:
   resolve_conflicts:
     runs-on: ubuntu-latest
     steps:
-      - name: resolve
-        run: echo "Hello world from my workflow!"
+      - name: resolve-test
+        uses: phwes/simple_hello_world@v1
+#        run: echo "Hello world from my workflow!"
 #        uses: mergifyio/conflicts_resolver
