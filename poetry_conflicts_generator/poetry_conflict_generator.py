@@ -46,13 +46,13 @@ def main(clear_branches: bool = False):
 
     # 3. Create the dependency PRs
     # Create PR1 with first dependency updated
-    p1_head = f"{uuid}-p1"
+    p1_head = f"{uid}-p1"
     utils.push_dependencies_update_branch(p1_head, "PyYAML", "6.0.0")
     p1 = repo.create_pull(title=f"PR1({uid}): update dependency ", body="PyYAML - 6.0.0", base="main", head=p1_head)
     print(p1)
 
     # Create PR2 with second dependency updated
-    p2_head = f"{uuid}-p2"
+    p2_head = f"{uid}-p2"
     print(p2_head)
     # p2 = repo.create_pull(title=f"PR2({uid}): update dependency ", body="", base=p0_head_branch, head=f"{uuid}-p1")
 
