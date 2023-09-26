@@ -24,6 +24,7 @@ def reset_packages():
 def main():
     # 1. reset state of packages to recreate scneario
     # 2. create the first branch
+    # PyYAML=6.0.0
 
     reset_packages()
 
