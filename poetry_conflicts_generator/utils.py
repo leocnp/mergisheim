@@ -35,10 +35,10 @@ def push_dependencies_update_branch(head: str, package: str, version: str):
     # poetry update
     subprocess.run(["poetry", "add", f"{package}={version}"])
     # commit
-    subprocess.run(["", ])
+    subprocess.run(["git", "commit", "-a", "-m", f"'dependency update {package}={version}'"])
     # push to upstream
-    subprocess.run(["git", "push", ""])
+    subprocess.run(["git", "push", "-u", "origin", head])
 
 
-def create_pull(repo, body: str, base: str, head: str):
-    pass
+# def create_pull(repo, body: str, base: str, head: str):
+#     pass
