@@ -21,19 +21,19 @@ TEST_PACKAGES = [
 
 def reset_packages():
     """Call before start to recreate the initial scenario"""
-    print("*** Resetting packages in base")
+    print("*** Resetting packages in main")
+    subprocess.run(["git", "checkout", "main"])
     # Remove previously installed package if merged (poetry remove)
     for package in [p["package"] for p in TEST_PACKAGES]:
         subprocess.run(["poetry", "remove", package])
     # Push cleaned to main
-
+    subprocess.run(
+        ["git", "commit", "-a", "-m", "'reset main branch with removed packages'"]
+    )
 
 
 def main(clear_branches: bool = False):
     print("***### Start ###***")
-    # 1. reset state of packages to recreate the scenario
-    reset_packages()
-
     user = gh_client.get_user()
     repo = gh_client.get_repo(f"{user.login}/{REPOSITORY_NAME}")
     uid = str(uuid.uuid4()).split("-")[0]
@@ -81,8 +81,8 @@ def main(clear_branches: bool = False):
                     print(e)
                     continue
 
-    # switch back to main
-    subprocess.run(["git", "checkout", "main"])
+    # Reset state of packages to recreate the scenario
+    reset_packages()
 
 
 if __name__ == "__main__":
