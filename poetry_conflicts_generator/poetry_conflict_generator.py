@@ -14,24 +14,26 @@ gh_client = utils.get_github_client()
 
 
 TEST_PACKAGES = [
-    {"package": "PyYAML", "version": "6.0.0"},
-    {"package": "Jinja2", "version": "3.1.0"},
+    {"package": "PyYAML", "initial_version": "6.0.0", "version": "6.0.1"},
+    {"package": "Jinja2", "initial_version": "3.0.0", "version": "3.1.0"},
 ]
 
 
 def reset_packages():
     """Call before start to recreate the initial scenario"""
-    print("*** Resetting packages in main branch origin")
+    print("*** Resetting packages versions in main branch origin")
     subprocess.run(["git", "checkout", "main"])
     subprocess.run(["git", "pull"])
 
-    # Remove previously installed package if merged (poetry remove)
-    for package in [p["package"] for p in TEST_PACKAGES]:
-        print(f"\t- try removing {package}")
-        subprocess.run(["poetry", "remove", package])
+    # Set back the initial version of package
+    for package, init_version in [
+        (p["package"], p["initial_version"]) for p in TEST_PACKAGES
+    ]:
+        print(f"\t- try setting back {package} to {init_version}")
+        subprocess.run(["poetry", "add", f"{package}={init_version}"])
     # Push cleaned to main
     subprocess.run(
-        ["git", "commit", "-a", "-m", "'reset main branch with removed packages'"]
+        ["git", "commit", "-a", "-m", "'reset initial version of packages in main'"]
     )
     subprocess.run(["git", "push", "-u", "origin", "main"])
 
@@ -62,11 +64,18 @@ def main(clear_branches: bool = False):
         )
 
         # Create PR2 with second dependency updated
+        # must set back the package updated in p1 first
+        subprocess.run(
+            [
+                "poetry",
+                "add",
+                TEST_PACKAGES[0]["package"],
+                TEST_PACKAGES[0]["initial_version"],
+            ]
+        )
         utils.push_dependencies_update_branch(
             p2_head, TEST_PACKAGES[-1]["package"], TEST_PACKAGES[-1]["version"]
         )
-        # must remove the package update in p1 first
-        subprocess.run(["poetry", "remove", TEST_PACKAGES[0]["version"]])
         p2 = repo.create_pull(
             title=f"PR2({pr_uuid}): update second package",
             body=TEST_PACKAGES[-1]["package"],
