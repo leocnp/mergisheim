@@ -89,7 +89,7 @@ def main(clear_branches: bool = False):
 
 
 if __name__ == "__main__":
-    main()
+    main(clear_branches=True)
 
 
 # 2. Create base PR
