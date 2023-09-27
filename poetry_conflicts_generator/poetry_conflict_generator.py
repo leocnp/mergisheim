@@ -85,8 +85,11 @@ def main(clear_branches: bool = False):
                 if not any(name in branch.name for name in ("main", p1_head, p2_head)):
                     print(f"*** Deleting outdated branch '{branch.name}'")
                     try:
-                        repo.get_git_ref(f"{branch.name}").delete()  # refs/heads/
-                        print("\tdeleted")
+                        # delete locally
+                        subprocess.run(["git", "branch", "-d", branch.name])
+                        # delete from origin
+                        repo.get_git_ref(f"heads/{branch.name}").delete()  # refs/heads/
+                        print("\t- deleted")
                     except Exception as e:
                         print(e)
                         continue
