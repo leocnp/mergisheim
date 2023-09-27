@@ -23,10 +23,11 @@ def reset_packages():
     """Call before start to recreate the initial scenario"""
     print("*** Resetting packages in main branch origin")
     subprocess.run(["git", "checkout", "main"])
+    subprocess.run(["git", "pull"])
 
     # Remove previously installed package if merged (poetry remove)
     for package in [p["package"] for p in TEST_PACKAGES]:
-        print(f"\t- remove {package}")
+        print(f"\t- try removing {package}")
         subprocess.run(["poetry", "remove", package])
     # Push cleaned to main
     subprocess.run(
