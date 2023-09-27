@@ -36,16 +36,16 @@ def main(clear_branches: bool = False):
     print("***### Start ###***")
     user = gh_client.get_user()
     repo = gh_client.get_repo(f"{user.login}/{REPOSITORY_NAME}")
-    uid = str(uuid.uuid4()).split("-")[0]
+    pr_uuid = str(uuid.uuid4()).split("-")[0]
 
     # 3. Create the dependency PRs
     # Create PR1 with first dependency updated
-    p1_head = f"{uuid}-p1"
+    p1_head = f"{pr_uuid}-p1"
     utils.push_dependencies_update_branch(
         p1_head, TEST_PACKAGES[0]["package"], TEST_PACKAGES[0]["version"]
     )
     p1 = repo.create_pull(
-        title=f"PR1({uid}): update first package",
+        title=f"PR1({pr_uuid}): update first package",
         body=TEST_PACKAGES[0]["package"],
         base="main",
         head=p1_head,
@@ -53,14 +53,14 @@ def main(clear_branches: bool = False):
     print(p1)
 
     # Create PR2 with second dependency updated
-    p2_head = f"{uuid}-p2"
+    p2_head = f"{pr_uuid}-p2"
     utils.push_dependencies_update_branch(
         p2_head, TEST_PACKAGES[-1]["package"], TEST_PACKAGES[-1]["version"]
     )
     # must remove the package update in p1 first
     subprocess.run(["poetry", "remove", TEST_PACKAGES[0]["version"]])
     p2 = repo.create_pull(
-        title=f"PR2({uid}): update second package",
+        title=f"PR2({pr_uuid}): update second package",
         body=TEST_PACKAGES[-1]["package"],
         base="main",
         head=p2_head,
