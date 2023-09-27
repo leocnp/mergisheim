@@ -21,8 +21,9 @@ TEST_PACKAGES = [
 
 def reset_packages():
     """Call before start to recreate the initial scenario"""
-    print("*** Resetting packages in main")
+    print("*** Resetting packages in main branch origin")
     subprocess.run(["git", "checkout", "main"])
+
     # Remove previously installed package if merged (poetry remove)
     for package in [p["package"] for p in TEST_PACKAGES]:
         subprocess.run(["poetry", "remove", package])
@@ -30,6 +31,7 @@ def reset_packages():
     subprocess.run(
         ["git", "commit", "-a", "-m", "'reset main branch with removed packages'"]
     )
+    subprocess.run(["git", "push", "-u", "origin", "main"])
 
 
 def main(clear_branches: bool = False):
@@ -78,7 +80,7 @@ def main(clear_branches: bool = False):
         if clear_branches:
             for branch in repo.get_branches():
                 if not any(name in branch.name for name in ("main", p1_head, p2_head)):
-                    print(f"*** Deleting branch {branch.name}")
+                    print(f"*** Deleting outdated branch '{branch.name}'")
                     try:
                         repo.get_git_ref(f"refs/heads/{branch.name}").delete()
                     except Exception as e:
@@ -90,7 +92,7 @@ def main(clear_branches: bool = False):
 
 
 if __name__ == "__main__":
-    main(clear_branches=False)
+    main(clear_branches=True)
 
 
 # 2. Create base PR
