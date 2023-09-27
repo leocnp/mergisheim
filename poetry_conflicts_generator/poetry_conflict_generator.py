@@ -50,13 +50,12 @@ def main(clear_branches: bool = False):
         utils.push_dependencies_update_branch(
             p1_head, TEST_PACKAGES[0]["package"], TEST_PACKAGES[0]["version"]
         )
-        p1 = repo.create_pull(
+        repo.create_pull(
             title=f"PR1({pr_uuid}): update first package",
             body=TEST_PACKAGES[0]["package"],
             base="main",
             head=p1_head,
         )
-        print(p1)
 
         # Create PR2 with second dependency updated
         utils.push_dependencies_update_branch(
@@ -70,7 +69,6 @@ def main(clear_branches: bool = False):
             base="main",
             head=p2_head,
         )
-        print(p2)
 
         # 2. Merge PR2 -> PR1 should conflict on poetry files
         print("*** Merging PR2 creates a poetry conflict on PR1")
