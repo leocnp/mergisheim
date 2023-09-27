@@ -39,6 +39,8 @@ def reset_packages():
 def main(clear_branches: bool = False):
     print("***### Start ###***\n")
 
+    reset_packages()
+
     user = gh_client.get_user()
     repo = gh_client.get_repo(f"{user.login}/{REPOSITORY_NAME}")
 
@@ -77,19 +79,20 @@ def main(clear_branches: bool = False):
         p2.merge()
 
     finally:
-        # Clear branches at end - needs fix (would delete PR branches)
+        # Clear branches at end
         if clear_branches:
             for branch in repo.get_branches():
                 if not any(name in branch.name for name in ("main", p1_head, p2_head)):
                     print(f"*** Deleting outdated branch '{branch.name}'")
                     try:
-                        repo.get_git_ref(f"refs/heads/{branch.name}").delete()
+                        repo.get_git_ref(f"{branch.name}").delete()  # refs/heads/
+                        print("\tdeleted")
                     except Exception as e:
                         print(e)
                         continue
 
-        # Reset state of packages to recreate the scenario
-        reset_packages()
+        # Back to main
+        subprocess.run(["git", "checkout", "main"])
 
 
 if __name__ == "__main__":
