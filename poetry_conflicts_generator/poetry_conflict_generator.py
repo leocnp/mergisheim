@@ -25,6 +25,8 @@ def reset_packages():
     # Remove previously installed package if merged (poetry remove)
     for package in [p["package"] for p in TEST_PACKAGES]:
         subprocess.run(["poetry", "remove", package])
+    # Push cleaned to main
+
 
 
 def main(clear_branches: bool = False):
