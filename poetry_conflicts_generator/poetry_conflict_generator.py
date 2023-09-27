@@ -74,6 +74,7 @@ def main(clear_branches: bool = False):
 
         # 2. Merge PR2 -> PR1 should conflict
         print("*** Merging PR2 creates a poetry conflict on PR1")
+        p2.merge()
 
     finally:
         # Clear branches at end - needs fix (would delete PR branches)
