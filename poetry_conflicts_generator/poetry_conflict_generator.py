@@ -52,10 +52,8 @@ def main(clear_branches: bool = False):
 
     try:
         # 1. Create the dependency PRs
-        # Create PR1 with first dependency updated
-        utils.push_dependencies_update_branch(
-            p1_head, TEST_PACKAGES[0]["package"], TEST_PACKAGES[0]["version"]
-        )
+        # Create PR1 with first dependency updated (contains only the first one updated)
+        utils.push_dependencies_update_branch(p1_head, [TEST_PACKAGES[0]])
         repo.create_pull(
             title=f"PR1({pr_uuid}): update first package",
             body=TEST_PACKAGES[0]["package"],
@@ -63,7 +61,7 @@ def main(clear_branches: bool = False):
             head=p1_head,
         )
 
-        # Create PR2 with second dependency updated
+        # Create PR2 with second dependency updated (contains both updated)
         # must set back the package updated in p1 first
         # subprocess.run(
         #     [
@@ -73,9 +71,7 @@ def main(clear_branches: bool = False):
         #         TEST_PACKAGES[0]["initial_version"],
         #     ]
         # )
-        utils.push_dependencies_update_branch(
-            p2_head, TEST_PACKAGES[-1]["package"], TEST_PACKAGES[-1]["version"]
-        )
+        utils.push_dependencies_update_branch(p2_head, TEST_PACKAGES)
         p2 = repo.create_pull(
             title=f"PR2({pr_uuid}): update second package",
             body=TEST_PACKAGES[-1]["package"],
@@ -85,7 +81,7 @@ def main(clear_branches: bool = False):
 
         # 2. Merge PR2 -> PR1 should conflict on poetry files
         print("*** Merging PR2 creates a poetry conflict on PR1")
-        p2.merge()
+        # p2.merge()
 
     finally:
         # Clear branches at end

@@ -14,14 +14,22 @@ def _create_local_branch(name: str):
     subprocess.run(["git", "checkout", "-b", name, "main"])
 
 
-def push_dependencies_update_branch(head: str, package: str, version: str):
-    print(f"*** Create head branch '{head}' with poetry package {package}={version}")
+def push_dependencies_update_branch(head: str, packages: list[dict]):
+    print(f"*** Create head branch '{head}' with poetry package(s) {packages}")
+
     _create_local_branch(head)
-    # poetry update
-    subprocess.run(["poetry", "add", f"{package}={version}"])
+    for p in packages:
+        package = p["package"]
+        version = p["version"]
+
+        print(f"\t- package {package}={version}")
+        # # rebase from main first
+        # subprocess.run(["git", "rebase", "main"])
+        # poetry update
+        subprocess.run(["poetry", "add", f"{package}={version}"])
     # commit
     subprocess.run(
-        ["git", "commit", "-a", "-m", f"'dependency update {package}={version}'"]
+        ["git", "commit", "-a", "-m", f"'dependency update {packages[-1]['package']}'"]
     )
     # push to upstream
     subprocess.run(["git", "push", "-u", "origin", head])
