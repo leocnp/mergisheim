@@ -65,14 +65,14 @@ def main(clear_branches: bool = False):
 
         # Create PR2 with second dependency updated
         # must set back the package updated in p1 first
-        subprocess.run(
-            [
-                "poetry",
-                "add",
-                TEST_PACKAGES[0]["package"],
-                TEST_PACKAGES[0]["initial_version"],
-            ]
-        )
+        # subprocess.run(
+        #     [
+        #         "poetry",
+        #         "add",
+        #         TEST_PACKAGES[0]["package"],
+        #         TEST_PACKAGES[0]["initial_version"],
+        #     ]
+        # )
         utils.push_dependencies_update_branch(
             p2_head, TEST_PACKAGES[-1]["package"], TEST_PACKAGES[-1]["version"]
         )
