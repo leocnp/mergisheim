@@ -15,6 +15,15 @@ pull_request_rules:
         users:
           - lecrepont02
 
+  - name: label on conflicts
+    conditions:
+      - conflict
+      - -closed
+    actions:
+      label:
+        toggle:
+          - conflict
+
   - name: dispatch gha workflow
     conditions:
       - label=gha
