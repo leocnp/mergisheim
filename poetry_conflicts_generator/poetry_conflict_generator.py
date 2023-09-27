@@ -73,7 +73,7 @@ def main(clear_branches: bool = False):
         print("*** Mering PR2 creates a poetry conflict on PR1")
 
     finally:
-        # Clear branches at end
+        # Clear branches at end - needs fix (would delete PR branches)
         if clear_branches:
             for branch in repo.get_branches():
                 if "main" not in branch.name:
@@ -89,7 +89,7 @@ def main(clear_branches: bool = False):
 
 
 if __name__ == "__main__":
-    main(clear_branches=True)
+    main(clear_branches=False)
 
 
 # 2. Create base PR
