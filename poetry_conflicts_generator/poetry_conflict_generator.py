@@ -15,7 +15,7 @@ gh_client = utils.get_github_client()
 
 TEST_PACKAGES = [
     {"package": "PyYAML", "initial_version": "6.0.0", "version": "6.0.1"},
-    {"package": "Jinja2", "initial_version": "3.0.0", "version": "3.1.0"},
+    {"package": "Jinja2", "initial_version": None, "version": "3.1.0"},
 ]
 
 
@@ -30,7 +30,11 @@ def reset_packages():
         (p["package"], p["initial_version"]) for p in TEST_PACKAGES
     ]:
         print(f"\t- try setting back {package} to {init_version}")
-        subprocess.run(["poetry", "add", f"{package}={init_version}"])
+        if init_version is None:
+            # Jinja2 does not exist at start
+            subprocess.run(["poetry", "remove", package])
+        else:
+            subprocess.run(["poetry", "add", f"{package}={init_version}"])
     # Push cleaned to main
     subprocess.run(
         ["git", "commit", "-a", "-m", "'reset initial version of packages in main'"]
@@ -51,17 +55,18 @@ def main(clear_branches: bool = False):
     p2_head = f"{pr_uuid}-p2"
 
     try:
-        # 1. Create the dependency PRs
-        # Create PR1 with first dependency updated (contains only the first one updated)
+        # Create the dependency PRs
+
+        # 1. Create PR1 with an updated dependency
         utils.push_dependencies_update_branch(p1_head, [TEST_PACKAGES[0]])
-        repo.create_pull(
+        p1 = repo.create_pull(
             title=f"PR1({pr_uuid}): update first package",
             body=TEST_PACKAGES[0]["package"],
             base="main",
             head=p1_head,
         )
 
-        # Create PR2 with second dependency updated (contains both updated)
+        # 2. Create PR2 with an added dependency in the meantime
         # must set back the package updated in p1 first
         # subprocess.run(
         #     [
@@ -71,17 +76,17 @@ def main(clear_branches: bool = False):
         #         TEST_PACKAGES[0]["initial_version"],
         #     ]
         # )
-        utils.push_dependencies_update_branch(p2_head, TEST_PACKAGES)
+        utils.push_dependencies_update_branch(p2_head, [TEST_PACKAGES[1]])
         p2 = repo.create_pull(
-            title=f"PR2({pr_uuid}): update second package",
+            title=f"PR2({pr_uuid}): add second package",
             body=TEST_PACKAGES[-1]["package"],
             base="main",
             head=p2_head,
         )
 
-        # 2. Merge PR2 -> PR1 should conflict on poetry files
-        print("*** Merging PR2 creates a poetry conflict on PR1")
-        # p2.merge()
+        # 2. Merge PR1 with update -> PR2 conflicts on the lock file
+        print("*** Merging PR1 creates a poetry conflict on PR1")
+        p1.merge()
 
     finally:
         # Clear branches at end
