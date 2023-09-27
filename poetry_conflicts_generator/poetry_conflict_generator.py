@@ -72,7 +72,7 @@ def main(clear_branches: bool = False):
         )
         print(p2)
 
-        # 2. Merge PR2 -> PR1 should conflict
+        # 2. Merge PR2 -> PR1 should conflict on poetry files
         print("*** Merging PR2 creates a poetry conflict on PR1")
         p2.merge()
 
