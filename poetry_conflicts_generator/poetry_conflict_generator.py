@@ -14,7 +14,7 @@ gh_client = utils.get_github_client()
 
 
 TEST_PACKAGES = [
-    {"package": "PyYAML", "initial_version": "6.0.0", "version": "6.0.1"},
+    {"package": "PyYAML", "initial_version": None, "version": "6.0.1"},  # "6.0.0"
     {"package": "Jinja2", "initial_version": None, "version": "3.1.0"},
 ]
 
@@ -60,7 +60,7 @@ def main(clear_branches: bool = False):
         # 1. Create PR1 with an updated dependency
         utils.push_dependencies_update_branch(p1_head, [TEST_PACKAGES[0]])
         p1 = repo.create_pull(
-            title=f"PR1({pr_uuid}): update first package",
+            title=f"PR1({pr_uuid}): add first package",  # update
             body=TEST_PACKAGES[0]["package"],
             base="main",
             head=p1_head,
@@ -86,7 +86,7 @@ def main(clear_branches: bool = False):
 
         # 2. Merge PR1 with update -> PR2 conflicts on the lock file
         print("*** Merging PR1 creates a poetry conflict on PR1")
-        p1.merge()
+        # p1.merge()
 
     finally:
         # Clear branches at end
