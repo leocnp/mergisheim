@@ -37,12 +37,14 @@ def main(clear_branches: bool = False):
 
     user = gh_client.get_user()
     repo = gh_client.get_repo(f"{user.login}/{REPOSITORY_NAME}")
+
     pr_uuid = str(uuid.uuid4()).split("-")[0]
+    p1_head = f"{pr_uuid}-p1"
+    p2_head = f"{pr_uuid}-p2"
 
     try:
         # 1. Create the dependency PRs
         # Create PR1 with first dependency updated
-        p1_head = f"{pr_uuid}-p1"
         utils.push_dependencies_update_branch(
             p1_head, TEST_PACKAGES[0]["package"], TEST_PACKAGES[0]["version"]
         )
@@ -55,7 +57,6 @@ def main(clear_branches: bool = False):
         print(p1)
 
         # Create PR2 with second dependency updated
-        p2_head = f"{pr_uuid}-p2"
         utils.push_dependencies_update_branch(
             p2_head, TEST_PACKAGES[-1]["package"], TEST_PACKAGES[-1]["version"]
         )
@@ -70,13 +71,13 @@ def main(clear_branches: bool = False):
         print(p2)
 
         # 2. Merge PR2 -> PR1 should conflict
-        print("*** Mering PR2 creates a poetry conflict on PR1")
+        print("*** Merging PR2 creates a poetry conflict on PR1")
 
     finally:
         # Clear branches at end - needs fix (would delete PR branches)
         if clear_branches:
             for branch in repo.get_branches():
-                if "main" not in branch.name:
+                if not any(name in branch.name for name in ("main", p1_head, p2_head)):
                     print(f"*** Deleting branch {branch.name}")
                     try:
                         repo.get_git_ref(f"refs/heads/{branch.name}").delete()
