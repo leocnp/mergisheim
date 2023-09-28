@@ -88,7 +88,7 @@ def main(clear_branches: bool = False):
 
         # 2. Merge PR1 with update -> PR2 conflicts on the lock file
         print("*** Merging PR1 creates a poetry conflict on PR1")
-        # p1.merge()
+        p1.merge()
 
     finally:
         # Clear branches at end
