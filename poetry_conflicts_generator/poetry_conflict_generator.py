@@ -14,8 +14,8 @@ gh_client = utils.get_github_client()
 
 
 TEST_PACKAGES = [
-    {"package": "PyYAML", "initial_version": None, "version": "6.0.1"},  # "6.0.0"
-    {"package": "Jinja2", "initial_version": None, "version": "3.1.0"},
+    {"package": "PyYAML", "initial_version": "6.0.0", "version": "6.0.1"},
+    {"package": "Jinja2", "initial_version": "3.1.0", "version": "3.1.2"},
 ]
 
 
@@ -31,10 +31,12 @@ def reset_packages():
     ]:
         print(f"\t- try setting back {package} to {init_version}")
         if init_version is None:
-            # Jinja2 does not exist at start
+            # Removes a package
             subprocess.run(["poetry", "remove", package])
         else:
-            subprocess.run(["poetry", "add", f"{package}={init_version}"])
+            # subprocess.run(["poetry", "add", f"{package}={init_version}"])
+            # Adds as caret requirement
+            subprocess.run(["poetry", "add", f"{package}@^{init_version}"])
     # Push cleaned to main
     subprocess.run(
         ["git", "commit", "-a", "-m", "'reset initial version of packages in main'"]
@@ -60,7 +62,7 @@ def main(clear_branches: bool = False):
         # 1. Create PR1 with an updated dependency
         utils.push_dependencies_update_branch(p1_head, [TEST_PACKAGES[0]])
         p1 = repo.create_pull(
-            title=f"PR1({pr_uuid}): add first package",  # update
+            title=f"PR1({pr_uuid}): add first package update",
             body=TEST_PACKAGES[0]["package"],
             base="main",
             head=p1_head,
@@ -78,7 +80,7 @@ def main(clear_branches: bool = False):
         # )
         utils.push_dependencies_update_branch(p2_head, [TEST_PACKAGES[1]])
         p2 = repo.create_pull(
-            title=f"PR2({pr_uuid}): add second package",
+            title=f"PR2({pr_uuid}): add second package update",
             body=TEST_PACKAGES[-1]["package"],
             base="main",
             head=p2_head,

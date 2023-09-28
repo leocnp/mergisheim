@@ -22,11 +22,11 @@ def push_dependencies_update_branch(head: str, packages: list[dict]):
         package = p["package"]
         version = p["version"]
 
-        print(f"\t- package {package}={version}")
+        print(f"\t- package {package}=@^{version}")
         # # rebase from main first
         # subprocess.run(["git", "rebase", "main"])
         # poetry update
-        subprocess.run(["poetry", "add", f"{package}={version}"])
+        subprocess.run(["poetry", "add", f"{package}@^{version}"])
     # commit
     subprocess.run(
         ["git", "commit", "-a", "-m", f"'dependency update {packages[-1]['package']}'"]
