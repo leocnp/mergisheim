@@ -9,6 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: resolve-test
-        uses: Mergifyio/gha-versionining-conflict-resolver@v1
-#        run: echo "Hello world from my workflow!"
-#        uses: mergifyio/conflicts_resolver
+        uses: Mergifyio/gha-versionining-conflict-resolver@main
+        with:
+          base: "main"
