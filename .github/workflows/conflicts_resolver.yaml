@@ -3,12 +3,18 @@ name: conflicts_resolver
 
 on:
   workflow_dispatch:
+    inputs:
+      base:
+        description: "Base branch"
+        type: string
+        required: false
+        default: "main"
 
 jobs:
   resolve_conflicts:
     runs-on: ubuntu-latest
     steps:
-      - name: resolve-test
+      - name: resolve-poetry-conflicts
         uses: Mergifyio/gha-versionining-conflict-resolver@main
         with:
-          base: "main"
+          base: ${{ inputs.base }}
