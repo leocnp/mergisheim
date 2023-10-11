@@ -12,7 +12,7 @@ on:
       github_token:
         description: "Personal Access Token"
         type: string
-        required: true
+        required: false
         default: ${{ secrets.MY_PAT }}
 
 jobs:
