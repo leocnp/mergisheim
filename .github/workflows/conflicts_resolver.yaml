@@ -19,3 +19,5 @@ jobs:
         with:
           base: ${{ inputs.base }}
           github_token: ${{ secrets.MY_PAT }}
+          user: lecrepont01
+          email: leo.ecrepont@mergify.com
