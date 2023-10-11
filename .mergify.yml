@@ -24,14 +24,11 @@ pull_request_rules:
         toggle:
           - conflict
 
-  - name: dispatch gha workflow
+  - name: dispatch gha workflow on conflicts
     conditions:
-      - label=gha
+      - conflict
     actions:
       github_actions:
         workflow:
           dispatch:
             - workflow: conflicts_resolver.yaml
-  #            inputs:
-  #              name: steve
-  #              age: 42
