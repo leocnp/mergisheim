@@ -27,6 +27,7 @@ pull_request_rules:
   - name: dispatch gha workflow on conflicts
     conditions:
       - conflict
+      - files=poetry.lock
     actions:
       github_actions:
         workflow:
