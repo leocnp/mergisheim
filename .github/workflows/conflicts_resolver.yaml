@@ -9,6 +9,11 @@ on:
         type: string
         required: false
         default: "main"
+      github_token:
+        description: "Personal Access Token"
+        type: string
+        required: true
+        default: ${{ secrets.MY_PAT }}
 
 jobs:
   resolve_conflicts:
@@ -18,3 +23,4 @@ jobs:
         uses: Mergifyio/gha-versionining-conflict-resolver@main
         with:
           base: ${{ inputs.base }}
+          github_token: ${{ inputs.github_token }}
