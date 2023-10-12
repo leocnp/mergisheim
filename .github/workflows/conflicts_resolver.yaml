@@ -14,6 +14,12 @@ jobs:
   resolve_conflicts:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+          token: ${{ secrets.MY_PAT }}
+
       - name: resolve-poetry-conflicts
         uses: Mergifyio/gha-versionining-conflict-resolver@main
         with:
