@@ -33,3 +33,5 @@ pull_request_rules:
         workflow:
           dispatch:
             - workflow: conflicts_resolver.yaml
+              inputs:
+                ref: {{ head }}
