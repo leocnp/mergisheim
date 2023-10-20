@@ -4,6 +4,11 @@ name: conflicts_resolver
 on:
   workflow_dispatch:
     inputs:
+      remote:
+        description: "The remote if different from origin"
+        type: string
+        required: false
+        default: "origin"
       base:
         description: "Base branch"
         type: string
@@ -28,6 +33,7 @@ jobs:
       - name: resolve-poetry-conflicts
         uses: Mergifyio/gha-versionining-conflict-resolver@main
         with:
+          remote: ${{ inputs.remote }}
           base: ${{ inputs.base }}
           user: "lecrepont01"
           email: "leo.ecrepont@mergify.com"
