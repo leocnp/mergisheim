@@ -15,7 +15,7 @@ pull_request_rules:
         users:
           - lecrepont02
 
-  - name: label on conflicts
+  - name: label and comment on conflicts
     conditions:
       - conflict
       - -closed
@@ -23,6 +23,8 @@ pull_request_rules:
       label:
         toggle:
           - conflict
+      comment:
+        message: Conflict! The full name of the head repository is {{ head_repo_full_name }}
 
   - name: dispatch gha workflow on conflicts
     conditions:
