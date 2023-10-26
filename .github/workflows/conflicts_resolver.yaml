@@ -4,20 +4,19 @@ name: conflicts_resolver
 on:
   workflow_dispatch:
     inputs:
-      remote:
-        description: "The remote if different from origin"
+      head-repo:
+        description: "Full name of the head repository"
         type: string
-        required: false
-        default: "origin"
+        required: true
+      head:
+        description: "Head branch"
+        type: string
+        required: true
       base:
         description: "Base branch"
         type: string
         required: false
         default: "main"
-      head:
-        description: "Head branch"
-        type: string
-        required: true
 
 jobs:
   resolve_conflicts:
@@ -28,12 +27,14 @@ jobs:
         with:
           fetch-depth: '0'
           token: ${{ secrets.MY_PAT }}
+          repository: ${{ inputs.head-repo }}
           ref: ${{ inputs.head }}
 
       - name: resolve-poetry-conflicts
         uses: Mergifyio/gha-versionining-conflict-resolver@main
         with:
-          remote: ${{ inputs.remote }}
+          head-repo: ${{ inputs.head-repo }}
+          head: ${{ inputs.head }}
           base: ${{ inputs.base }}
           user: "lecrepont01"
           email: "leo.ecrepont@mergify.com"
