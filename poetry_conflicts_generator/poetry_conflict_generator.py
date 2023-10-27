@@ -9,8 +9,18 @@ from poetry_conflicts_generator import utils
 
 REPOSITORY_NAME = "mergisheim"
 
+CREATE_FROM_FORK: bool = True
 
-gh_client = utils.get_github_client()
+if CREATE_FROM_FORK:
+    # fork configured on lecrepont02 - see `git remote -v`
+    from secrets import token
+    # ORIGIN = "fork"
+    ORIGIN = f"https://{token}@github.com/lecrepont02/mergisheim.git"
+else:
+    ORIGIN = "origin"
+
+
+gh_client = utils.get_github_client(from_fork=CREATE_FROM_FORK)
 
 
 TEST_PACKAGES = [
@@ -22,6 +32,7 @@ TEST_PACKAGES = [
 def reset_packages():
     """Call before start to recreate the initial scenario"""
     print("*** Resetting packages versions in main branch origin")
+
     subprocess.run(["git", "checkout", "main"])
     subprocess.run(["git", "pull"])
 
@@ -37,19 +48,23 @@ def reset_packages():
             # subprocess.run(["poetry", "add", f"{package}={init_version}"])
             # Adds as caret requirement
             subprocess.run(["poetry", "add", f"{package}@^{init_version}"])
+
     # Push cleaned to main
     subprocess.run(
         ["git", "commit", "-a", "-m", "'reset initial version of packages in main'"]
     )
-    subprocess.run(["git", "push", "-u", "origin", "main"])
+
+    subprocess.run(["git", "push", "-u", "origin"])  #  origin, "main"])
 
 
 def main(clear_branches: bool = False):
-    print("***### Start ###***\n")
+    print(f"*** Running conflicts in a PR on forked repository? {CREATE_FROM_FORK} ***")
 
+    # Recreate initial scenario
     reset_packages()
 
     user = gh_client.get_user()
+    print(f"*** Getting repo {user.login}/{REPOSITORY_NAME} ***")
     repo = gh_client.get_repo(f"{user.login}/{REPOSITORY_NAME}")
 
     pr_uuid = str(uuid.uuid4()).split("-")[0]
@@ -60,13 +75,14 @@ def main(clear_branches: bool = False):
         # Create the dependency PRs
 
         # 1. Create PR1 with an updated dependency
-        utils.push_dependencies_update_branch(p1_head, [TEST_PACKAGES[0]])
+        utils.push_dependencies_update_branch(ORIGIN, p1_head, [TEST_PACKAGES[0]])
         p1 = repo.create_pull(
             title=f"PR1({pr_uuid}): add first package update",
             body=TEST_PACKAGES[0]["package"],
             base="main",
             head=p1_head,
         )
+        print("Created p1")
 
         # 2. Create PR2 with an added dependency in the meantime
         # must set back the package updated in p1 first
@@ -78,7 +94,7 @@ def main(clear_branches: bool = False):
         #         TEST_PACKAGES[0]["initial_version"],
         #     ]
         # )
-        utils.push_dependencies_update_branch(p2_head, [TEST_PACKAGES[1]])
+        utils.push_dependencies_update_branch(ORIGIN, p2_head, [TEST_PACKAGES[1]])
         p2 = repo.create_pull(
             title=f"PR2({pr_uuid}): add second package update",
             body=TEST_PACKAGES[-1]["package"],
@@ -111,7 +127,11 @@ def main(clear_branches: bool = False):
 
 
 if __name__ == "__main__":
+    print("***### Start ###***\n")
     main(clear_branches=True)
+    # try:
+    #     print("*** Pre-condition: git login ***")
+    # finally:
 
 
 # 2. Create base PR
