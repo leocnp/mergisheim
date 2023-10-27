@@ -73,13 +73,17 @@ def main(clear_branches: bool = False):
 
     try:
         # Create the dependency PRs
+        if CREATE_FROM_FORK:
+            base = "lecrepont01/mergisheim:main"
+        else:
+            base = "main"
 
         # 1. Create PR1 with an updated dependency
         utils.push_dependencies_update_branch(ORIGIN, p1_head, [TEST_PACKAGES[0]])
         p1 = repo.create_pull(
             title=f"PR1({pr_uuid}): add first package update",
             body=TEST_PACKAGES[0]["package"],
-            base="main",
+            base=base,  # origin / main
             head=p1_head,
         )
         print("Created p1")
@@ -98,7 +102,7 @@ def main(clear_branches: bool = False):
         p2 = repo.create_pull(
             title=f"PR2({pr_uuid}): add second package update",
             body=TEST_PACKAGES[-1]["package"],
-            base="main",
+            base=base,
             head=p2_head,
         )
 
