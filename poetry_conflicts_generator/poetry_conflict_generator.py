@@ -76,8 +76,12 @@ def main(clear_branches: bool = False):
     try:
         # Create the dependency PRs
         if CREATE_FROM_FORK:
-            p1_head = f"{user.login}:{p1_head}"
-            p2_head = f"{user.login}:{p2_head}"
+            # for API specify the forked head user
+            p1_head_api = f"{user.login}:{p1_head}"
+            p2_head_api = f"{user.login}:{p2_head}"
+        else:
+            p1_head_api = p1_head
+            p2_head_api = p2_head
 
         # 1. Create PR1 with an updated dependency
         utils.push_dependencies_update_branch(ORIGIN, p1_head, [TEST_PACKAGES[0]])
@@ -85,7 +89,7 @@ def main(clear_branches: bool = False):
             title=f"PR1({pr_uuid}): add first package update",
             body=TEST_PACKAGES[0]["package"],
             base="main",
-            head=p1_head,
+            head=p1_head_api,
         )
         print("Created p1")
 
@@ -104,7 +108,7 @@ def main(clear_branches: bool = False):
             title=f"PR2({pr_uuid}): add second package update",
             body=TEST_PACKAGES[-1]["package"],
             base="main",
-            head=p2_head,
+            head=p2_head_api,
         )
         print(p2)
 
