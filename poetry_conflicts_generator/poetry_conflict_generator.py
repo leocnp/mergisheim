@@ -56,6 +56,10 @@ def reset_packages():
 
     subprocess.run(["git", "push", "-u", "origin"])  #  origin, "main"])
 
+    if CREATE_FROM_FORK:
+        # sync the fork
+        print("Sync the fork repo")
+
 
 def main(clear_branches: bool = False):
     print(f"*** Running conflicts in a PR on forked repository? {CREATE_FROM_FORK} ***")
