@@ -65,25 +65,26 @@ def main(clear_branches: bool = False):
 
     user = gh_client.get_user()
     print(f"*** Getting repo {user.login}/{REPOSITORY_NAME} ***")
-    repo = gh_client.get_repo(f"{user.login}/{REPOSITORY_NAME}")
+    # repo = gh_client.get_repo(f"{user.login}/{REPOSITORY_NAME}")
+    # Actually PR is created on the main repo not the forked one !
+    repo = gh_client.get_repo(f"lecrepont01/{REPOSITORY_NAME}")
 
     pr_uuid = str(uuid.uuid4()).split("-")[0]
-    p1_head = f"{pr_uuid}-p1"
     p2_head = f"{pr_uuid}-p2"
+    p1_head = f"{pr_uuid}-p1"
 
     try:
         # Create the dependency PRs
         if CREATE_FROM_FORK:
-            base = "lecrepont01/mergisheim:main"
-        else:
-            base = "main"
+            p1_head = f"{user.login}:{p1_head}"
+            p2_head = f"{user.login}:{p2_head}"
 
         # 1. Create PR1 with an updated dependency
         utils.push_dependencies_update_branch(ORIGIN, p1_head, [TEST_PACKAGES[0]])
         p1 = repo.create_pull(
             title=f"PR1({pr_uuid}): add first package update",
             body=TEST_PACKAGES[0]["package"],
-            base=base,  # origin / main
+            base="main",
             head=p1_head,
         )
         print("Created p1")
@@ -102,9 +103,10 @@ def main(clear_branches: bool = False):
         p2 = repo.create_pull(
             title=f"PR2({pr_uuid}): add second package update",
             body=TEST_PACKAGES[-1]["package"],
-            base=base,
+            base="main",
             head=p2_head,
         )
+        print(p2)
 
         # 2. Merge PR1 with update -> PR2 conflicts on the lock file
         print("*** Merging PR1 creates a poetry conflict on PR1")
