@@ -1,7 +1,7 @@
 """
 Script to generate poetry conflicts to be resolved
 """
-
+import os
 import subprocess
 import uuid
 
@@ -9,7 +9,7 @@ from poetry_conflicts_generator import utils
 
 REPOSITORY_NAME = "mergisheim"
 
-CREATE_FROM_FORK: bool = True
+CREATE_FROM_FORK: bool = bool(os.getenv("CONFLICT_FROM_FORK", 0))
 
 if CREATE_FROM_FORK:
     # fork configured on lecrepont02 - see `git remote -v`
