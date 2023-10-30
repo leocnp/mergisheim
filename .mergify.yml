@@ -37,4 +37,5 @@ pull_request_rules:
             - workflow: conflicts_resolver.yaml
               inputs:
                 head-repo: "{{ head_repo_full_name }}"
-                head: "{{ head }}"
+                head-branch: "{{ head }}"
+                base-branch: main
