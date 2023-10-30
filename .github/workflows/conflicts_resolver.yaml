@@ -8,11 +8,11 @@ on:
         description: "Full name of the head repository"
         type: string
         required: true
-      head:
+      head-branch:
         description: "Head branch"
         type: string
         required: true
-      base:
+      base-branch:
         description: "Base branch"
         type: string
         required: false
@@ -22,22 +22,17 @@ jobs:
   resolve_conflicts:
     runs-on: ubuntu-latest
     steps:
-      - name: Display inputs
-        run: echo head-repo=${{ inputs.head-repo }} ref=${{ inputs.head }}
-
       - name: Checkout branch
         uses: actions/checkout@v4
         with:
           fetch-depth: '0'
           token: ${{ secrets.MY_PAT }}
-#          repository: ${{ inputs.head-repo }}
-#          ref: ${{ inputs.head }}
 
       - name: resolve-poetry-conflicts
         uses: Mergifyio/gha-versionining-conflict-resolver@main
         with:
           head-repo: ${{ inputs.head-repo }}
-          head: ${{ inputs.head }}
-          base: ${{ inputs.base }}
+          head-branch: ${{ inputs.head-branch }}
+          base-branch: ${{ inputs.base-branch }}
           user: "lecrepont01"
           email: "leo.ecrepont@mergify.com"
