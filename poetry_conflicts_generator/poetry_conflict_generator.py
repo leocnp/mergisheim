@@ -58,7 +58,7 @@ def reset_packages():
 
     if CREATE_FROM_FORK:
         # sync the fork
-        print("Sync the fork repo")
+        print("Sync the fork repo - not necessary")
 
 
 def main(clear_branches: bool = False):
