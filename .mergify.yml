@@ -40,6 +40,6 @@ pull_request_rules:
                 head-branch: "{{ head }}"
                 base-branch: main
                 # for the comment
-                base-repo: "{{ repository-full-name }}"
+                base-repo: "{{ repository_full_name }}"
                 pull-request-number: "{{ number }}"
                 author: "{{ author }}"
