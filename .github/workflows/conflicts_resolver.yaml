@@ -17,6 +17,11 @@ on:
         type: string
         required: false
         default: "main"
+      # for the comment
+      base-repo:
+        description: "Base repo for the comment"
+        type: string
+        required: false
       pull-request-number:
         description: "PR number to comment"
         type: number
@@ -39,6 +44,7 @@ jobs:
       - name: resolve-poetry-conflicts
         uses: Mergifyio/gha-versionining-conflict-resolver@main
         env:
+          # for comment with gh
           GITHUB_TOKEN: ${{ secrets.MY_PAT }}
         with:
           head-repo: ${{ inputs.head-repo }}
@@ -46,5 +52,7 @@ jobs:
           base-branch: ${{ inputs.base-branch }}
           user: "lecrepont01"
           email: "leo.ecrepont@mergify.com"
+          # for the comment
+          base-repo: ${{ inputs.base-repo }}
           pull-request-number: ${{ inputs.pull-request-number }}
           author: ${{ inputs.author }}
