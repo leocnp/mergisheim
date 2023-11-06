@@ -38,6 +38,8 @@ jobs:
 
       - name: resolve-poetry-conflicts
         uses: Mergifyio/gha-versionining-conflict-resolver@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_PAT }}
         with:
           head-repo: ${{ inputs.head-repo }}
           head-branch: ${{ inputs.head-branch }}
