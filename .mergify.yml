@@ -39,3 +39,5 @@ pull_request_rules:
                 head-repo: "{{ head_repo_full_name }}"
                 head-branch: "{{ head }}"
                 base-branch: main
+                pull-request-number: "{{ number }}"
+                author: "{{ author }}"

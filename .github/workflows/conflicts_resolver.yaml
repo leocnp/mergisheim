@@ -17,6 +17,14 @@ on:
         type: string
         required: false
         default: "main"
+      pull-request-number:
+        description: "PR number to comment"
+        type: number
+        required: false
+      author:
+        description: "Author of the PR for the comment"
+        type: string
+        required: false
 
 jobs:
   resolve_conflicts:
@@ -36,3 +44,5 @@ jobs:
           base-branch: ${{ inputs.base-branch }}
           user: "lecrepont01"
           email: "leo.ecrepont@mergify.com"
+          pull-request-number: ${{ inputs.pull-request-number }}
+          author: ${{ inputs.author }}
