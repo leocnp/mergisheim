@@ -26,16 +26,16 @@ pull_request_rules:
       comment:
         message: Conflict! The full name of the head repository is {{ head_repo_full_name }}
 
-#  - name: dispatch gha workflow on conflicts
-#    conditions:
-#      - conflict
-#      - files=poetry.lock
-#    actions:
-#      github_actions:
-#        workflow:
-#          dispatch:
-#            - workflow: conflicts_resolver.yaml
-#              inputs:
-#                head-repo: "{{ head_repo_full_name }}"
-#                head-branch: "{{ head }}"
-#                base-branch: main
+  - name: dispatch gha workflow on conflicts
+    conditions:
+      - conflict
+      - files=poetry.lock
+    actions:
+      github_actions:
+        workflow:
+          dispatch:
+            - workflow: conflicts_resolver.yaml
+              inputs:
+                head-repo: "{{ head_repo_full_name }}"
+                head-branch: "{{ head }}"
+                base-branch: main
