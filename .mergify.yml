@@ -15,6 +15,13 @@ pull_request_rules:
         users:
           - lecrepont02
 
+  - name: test 1 file only
+    conditions:
+      - "#files=1"
+    actions:
+      comment:
+        message: There is only one file in this PR
+
   - name: label and comment on conflicts
     conditions:
       - conflict
