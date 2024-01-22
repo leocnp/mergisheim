@@ -1,3 +1,16 @@
+queue_rules:
+    - name: highprio
+      queue_conditions:
+        - label=high
+
+    - name: default
+      queue_conditions:
+        - label=default
+
+    - name: lowprio
+      queue_conditions:
+        - label=low
+
 pull_request_rules:
 
   - name: Automatic merge on approval
