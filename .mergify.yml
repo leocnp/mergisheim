@@ -1,25 +1,35 @@
 queue_rules:
-    - name: highprio
-      queue_conditions:
-        - label=high
-
-    - name: default
-      queue_conditions:
-        - label=default
-
-    - name: lowprio
-      queue_conditions:
-        - label=low
-
+  - name: highprio
+    queue_conditions:
+      - label=high
+  - name: default
+    queue_conditions:
+      - label=default
+  - name: lowprio
+    queue_conditions:
+      - label=low
 pull_request_rules:
+  - name: Notify when a PR is removed from the queue
+    description: >-
+      Notify the PR author when its pull request is removed from the merge
+      queue.
+    conditions:
+      - queue-dequeue-reason != none
+      - queue-dequeue-reason != pr-merged
+    actions:
+      comment:
+        message: >
+          Hey @{{author}}, your pull request has been dequeued due to the
+          following reason: {{queue_dequeue_reason}}.
 
+          Sorry about that, but you can requeue the PR by using `@mergifyio
+          requeue` if you think this was a mistake.
   - name: Automatic merge on approval
     conditions:
-      - "#approved-reviews-by>=1"
+      - '#approved-reviews-by>=1'
     actions:
       merge:
         method: merge
-
   - name: ask developers to review for a trusted author
     conditions:
       - label=ready
@@ -27,25 +37,24 @@ pull_request_rules:
       request_reviews:
         users:
           - lecrepont02
-
   - name: test 1 file only
     conditions:
-      - "#files=1"
+      - '#files=1'
     actions:
       comment:
         message: There is only one file in this PR
-
   - name: label and comment on conflicts
     conditions:
       - conflict
-      - -closed
+      - '-closed'
     actions:
       label:
         toggle:
           - conflict
       comment:
-        message: Conflict! The full name of the head repository is {{ head_repo_full_name }}
-
+        message: >-
+          Conflict! The full name of the head repository is {{
+          head_repo_full_name }}
   - name: dispatch gha workflow on conflicts
     conditions:
       - conflict
@@ -56,6 +65,6 @@ pull_request_rules:
           dispatch:
             - workflow: conflicts_resolver.yaml
               inputs:
-                head-repo: "{{ head_repo_full_name }}"
-                head-branch: "{{ head }}"
+                head-repo: '{{ head_repo_full_name }}'
+                head-branch: '{{ head }}'
                 base-branch: main
