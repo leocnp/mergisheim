@@ -1,1 +1,1 @@
-Dedicated to merging Pull Requests
+Dedicated to merging Pull Requests with Mergify.
