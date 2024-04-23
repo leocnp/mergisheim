@@ -1,1 +1,1 @@
-Dedicated to merging
+Dedicated to merging Pull Requests
