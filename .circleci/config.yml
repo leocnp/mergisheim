@@ -43,9 +43,9 @@ jobs:
 
       - persist_to_workspace:
           # test usage of workspace sharing
-          root: /tmp/workspace
+          root: /test_results
           paths:
-            - test_results
+            - report.xml
 
       - store_test_results:
           path: test_results
@@ -61,7 +61,7 @@ jobs:
           name: Display reports
           command: |
             echo "Showing test results:\n"
-            cat /tmp/workspace/test_results/report.xml
+            cat /tmp/workspace/report.xml
 
 
 workflows:
