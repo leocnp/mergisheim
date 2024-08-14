@@ -5,26 +5,33 @@ orbs:
 
 jobs:
   run_tests:
-#    working_directory: ~/project
     executor:
       name: python/default
       tag: 3.12.4
+    parameters:
+      actor:
+        type: string
+        default: krepon
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: poetry
       - run:
           name: Echo something
-          command: echo "Hello World"
+          command: echo "Hello World << parameters.actor >> !"
       - run:
           name: Run tests
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
       - run:
+          # make a test orb out of it
           name: Display reports
           command: cat test_results/report.xml
           when: always
+      # - mergify/ci_issues
+      #     path: test_results/report.xml
+      #     auth_token: ...
       - store_test_results:
           path: test_results
 
@@ -32,4 +39,5 @@ jobs:
 workflows:
   continuous_integration:
     jobs:
-      - run_tests
+      - run_tests:
+          actor: lecrepont01
