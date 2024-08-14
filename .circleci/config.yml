@@ -23,8 +23,8 @@ jobs:
             poetry run pytest -vv --junitxml=test_results/report.xml
       - run:
           name: Display reports
-          command: cat mergisheim/tests/results/report.xml
-          when: always  # will run even if tests fail
+          command: cat test_results/report.xml
+          when: always
       - store_test_results:
           path: tests_results
 
