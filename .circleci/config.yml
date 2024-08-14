@@ -13,8 +13,11 @@ jobs:
       - python/install-packages:
           pkg-manager: poetry
       - run:
+          name: Echo something
+          command: echo "Hello World"
+      - run:
           name: Run tests
-          command: poetry run pytest --junitxml=mergisheim/tests/report.xml
+          command: poetry run pytest -vv --junitxml=mergisheim/tests/report.xml
       - run:
           name: Display reports
           command: cat mergisheim/tests/report.xml
