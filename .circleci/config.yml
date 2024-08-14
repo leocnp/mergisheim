@@ -72,9 +72,9 @@ workflows:
           actor: lecrepont01
 #          context: org-context
 
-      - display_tests_report:
-          requires:
-            - run_tests
+      - display_tests_report
+#          requires:
+#            - run_tests
 
 #      # NOTE: If ran sequentially in another job (must use shared workspace)
 #      - mergify_ci_issues_export:
