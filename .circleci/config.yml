@@ -1,9 +1,20 @@
 version: 2.1
 
+# TODO:
+# - see usage of context to share the config environment variables
+# - create orb
+
 orbs:
   python: circleci/python@2.1.1
 
+  #      # make a test orb out of it
+  #      - run:
+  #          name: Display reports
+  #          command: cat test_results/report.xml
+  #          when: always
+
 jobs:
+
   run_tests:
     executor:
       name: python/default
@@ -24,20 +35,46 @@ jobs:
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
-      - run:
-          # make a test orb out of it
-          name: Display reports
-          command: cat test_results/report.xml
-          when: always
+
+      # NOTE: use as a step or in a separate job (share report in workspace in that case)
       # - mergify/ci_issues
       #     path: test_results/report.xml
       #     auth_token: ...
+
       - store_test_results:
           path: test_results
 
+      - persist_to_workspace:
+          # test usage of workspace sharing
+          root: /tmp/workspace
+          paths:
+            - test_results
+
+  display_tests_report:
+    executor: docker
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Display reports
+          command: |
+            echo "Showing test results:\n"
+            cat /tmp/workspace/test_results/report.xml
+
 
 workflows:
+  # each workflow has a workspace
   continuous_integration:
     jobs:
       - run_tests:
           actor: lecrepont01
+#          context: org-context
+
+      - display_tests_report:
+          requires:
+            - run_tests
+
+#      # NOTE: If ran sequentially in another job (must use shared workspace)
+#      - mergify_ci_issues_export:
+#          requires:
+#            - run_tests
