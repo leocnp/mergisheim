@@ -41,14 +41,15 @@ jobs:
       #     path: test_results/report.xml
       #     auth_token: ...
 
-      - store_test_results:
-          path: test_results
-
       - persist_to_workspace:
           # test usage of workspace sharing
           root: /tmp/workspace
           paths:
             - test_results
+
+      - store_test_results:
+          path: test_results
+
 
   display_tests_report:
     docker:
