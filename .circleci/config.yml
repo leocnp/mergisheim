@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
-          package-manager: poetry
+          pkg-manager: poetry
       - run:
           name: Run tests
           command: poetry run pytest
