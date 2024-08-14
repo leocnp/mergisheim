@@ -14,7 +14,10 @@ jobs:
           pkg-manager: poetry
       - run:
           name: Run tests
-          command: poetry run pytest
+          command: poetry run pytest --junitxml=mergisheim/tests/report.xml
+      - run:
+          name: Display reports
+          command: cat mergisheim/tests/report.xml
 
 workflows:
   continuous_integration:
