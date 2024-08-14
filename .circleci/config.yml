@@ -5,6 +5,7 @@ orbs:
 
 jobs:
   run_tests:
+#    working_directory: ~/project
     executor:
       name: python/default
       tag: 3.12.4
@@ -17,10 +18,16 @@ jobs:
           command: echo "Hello World"
       - run:
           name: Run tests
-          command: poetry run pytest -vv --junitxml=mergisheim/tests/report.xml
+          command: |
+            mkdir test_results
+            poetry run pytest -vv --junitxml=test_results/report.xml
       - run:
           name: Display reports
-          command: cat mergisheim/tests/report.xml
+          command: cat mergisheim/tests/results/report.xml
+          when: always  # will run even if tests fail
+      - store_test_results:
+          path: tests_results
+
 
 workflows:
   continuous_integration:
