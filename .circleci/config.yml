@@ -43,7 +43,7 @@ jobs:
 
       - persist_to_workspace:
           # test usage of workspace sharing
-          root: /test_results
+          root: test_results
           paths:
             - report.xml
 
