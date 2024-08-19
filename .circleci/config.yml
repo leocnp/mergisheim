@@ -6,7 +6,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.1.1
-  mergisheim: krepon/mergisheim@0.0.1
+  mergisheim: krepon/mergisheim@0.0.2
 
   #      # make a test orb out of it
   #      - run:
