@@ -6,6 +6,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.1.1
+  mergisheim: krepon/mergisheim@0.0.1
 
   #      # make a test orb out of it
   #      - run:
@@ -27,9 +28,11 @@ jobs:
       - checkout
       - python/install-packages:
           pkg-manager: poetry
-      - run:
-          name: Echo something
-          command: echo "Hello World << parameters.actor >> !"
+      - mergisheim/greet:
+          to: LECREPONT01
+#      - run:
+#          name: Echo something
+#          command: echo "Hello World << parameters.actor >> !"
       - run:
           name: Run tests
           command: |
