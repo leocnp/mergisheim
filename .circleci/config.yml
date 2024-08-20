@@ -37,7 +37,7 @@ jobs:
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
-      - mergifyio/ci-issues:
+      - mergifyio/upload:
           token: $MERGIFYIO_CI_ISSUES_TOKEN
           report_paths: test_results/report.xml
 
