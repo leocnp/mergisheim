@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   python: circleci/python@2.1.1
   mergisheim: krepon/mergisheim@0.0.2
+  mergifyio: mergifyio/ci-issues@dev:test_version
 
 jobs:
   run_tests:
@@ -36,6 +37,9 @@ jobs:
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
+      - mergifyio/ci-issues:
+          token: $MERGIFYIO_CI_ISSUES_TOKEN
+          report_paths: test_results/report.xml
 
       # NOTE: use as a step or in a separate job (share report in workspace in that case)
       # - mergify/ci_issues
@@ -73,6 +77,7 @@ workflows:
           actor: lecrepont01
           context:
             - test_context
+            - ci_secrets
 
 #      - display_tests_report:
 #          requires:
