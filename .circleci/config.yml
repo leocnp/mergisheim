@@ -18,6 +18,7 @@ jobs:
       - python/install-packages:
           pkg-manager: poetry
       - mergisheim/greet:
+          # my personnal test orb
           to: LECREPONT01
       - run:
           name: Echo test some parameters
@@ -29,6 +30,7 @@ jobs:
             echo "Head SHA: ${HEAD_SHA}"
             echo "Head SHA from env var: ${CIRCLE_SHA1}"
             echo "Repo name: ${CIRCLE_PROJECT_REPONAME}"
+            echo "A secret from my test_context: ${MERGISHEIM_YOLO}"
       - run:
           name: Run tests
           command: |
@@ -49,18 +51,18 @@ jobs:
       - store_test_results:
           path: test_results
 
-
-  display_tests_report:
-    docker:
-      - image: alpine:latest
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Display reports
-          command: |
-            echo "Showing test results:\n"
-            cat /tmp/workspace/report.xml
+  # A separate job to illustrate the persist workspace usage
+#  display_tests_report:
+#    docker:
+#      - image: alpine:latest
+#    steps:
+#      - attach_workspace:
+#          at: /tmp/workspace
+#      - run:
+#          name: Display reports
+#          command: |
+#            echo "Showing test results:\n"
+#            cat /tmp/workspace/report.xml
 
 
 workflows:
@@ -69,13 +71,9 @@ workflows:
     jobs:
       - run_tests:
           actor: lecrepont01
-#          context: org-context
+          context:
+            - test_context
 
-      - display_tests_report:
-          requires:
-            - run_tests
-
-#      # NOTE: If ran sequentially in another job (must use shared workspace)
-#      - mergify_ci_issues_export:
+#      - display_tests_report:
 #          requires:
 #            - run_tests
