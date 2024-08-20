@@ -1,21 +1,10 @@
 version: 2.1
 
-# TODO:
-# - see usage of context to share the config environment variables
-# - create orb
-
 orbs:
   python: circleci/python@2.1.1
   mergisheim: krepon/mergisheim@0.0.2
 
-  #      # make a test orb out of it
-  #      - run:
-  #          name: Display reports
-  #          command: cat test_results/report.xml
-  #          when: always
-
 jobs:
-
   run_tests:
     executor:
       name: python/default
@@ -30,9 +19,16 @@ jobs:
           pkg-manager: poetry
       - mergisheim/greet:
           to: LECREPONT01
-#      - run:
-#          name: Echo something
-#          command: echo "Hello World << parameters.actor >> !"
+      - run:
+          name: Echo test some parameters
+          environment:
+            HEAD_SHA: <<pipeline.git.revision>>
+          command: |
+            echo "Hello World << parameters.actor >> !" 
+            echo "Current Job name: ${CIRCLE_JOB}"
+            echo "Head SHA: ${HEAD_SHA}"
+            echo "Head SHA from env var: ${CIRCLE_SHA1}"
+            echo "Repo name: ${CIRCLE_PROJECT_REPONAME}"
       - run:
           name: Run tests
           command: |
