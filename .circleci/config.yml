@@ -40,6 +40,7 @@ jobs:
       - mergifyio/upload:
           token: $MERGIFYIO_CI_ISSUES_TOKEN
           report_paths: test_results/report.xml
+          when: always  # test: TODO: should be coded on the orb
 
       # NOTE: use as a step or in a separate job (share report in workspace in that case)
       # - mergify/ci_issues
