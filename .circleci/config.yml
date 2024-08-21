@@ -40,7 +40,7 @@ jobs:
             poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
           token: $MERGIFYIO_CI_ISSUES_TOKEN
-          repository: <<pipeline.trigger_parameters.github_app.repo_name>>
+          repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
           report_paths: test_results/report.xml
 
       # NOTE: use as a step or in a separate job (share report in workspace in that case)
