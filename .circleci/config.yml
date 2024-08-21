@@ -14,6 +14,9 @@ jobs:
       actor:
         type: string
         default: krepon
+      mergify_ci_issues_token:
+        type: string
+        default: ${MERGIFY_CI_ISSUES_TOKEN}
     steps:
       - checkout
       - python/install-packages:
@@ -33,14 +36,14 @@ jobs:
             echo "Repo name: ${CIRCLE_PROJECT_REPONAME}"
             echo "A secret from my test_context: ${MERGISHEIM_YOLO}"
             echo "Repository URL <<pipeline.trigger_parameters.github_app.repo_url>>"
-            echo "TOKEN: ${MERGIFY_CI_ISSUES_TOKEN}"
+            echo "TOKEN: <<parameters.mergify_ci_issues_token>>"
       - run:
           name: Run tests
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
-          token: MERGIFY_CI_ISSUES_TOKEN
+          token: <<parameters.mergify_ci_issues_token>>
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
           report_paths: test_results/report.xml
 
