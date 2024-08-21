@@ -76,10 +76,10 @@ workflows:
   continuous_integration:
     jobs:
       - run_tests:
-          actor: lecrepont01
           context:
             - ci_secrets
 
+#          actor: lecrepont01
 #      - display_tests_report:
 #          requires:
 #            - run_tests
