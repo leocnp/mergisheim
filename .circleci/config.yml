@@ -35,7 +35,7 @@ jobs:
             echo "Head SHA: ${HEAD_SHA}"
             echo "Head SHA from env var: ${CIRCLE_SHA1}"
             echo "Repo name: ${CIRCLE_PROJECT_REPONAME}"
-            echo "A secret from my test_context: ${MERGISHEIM_YOLO}"
+#            echo "A secret from my test_context: ${MERGISHEIM_YOLO}"
             echo "Repository URL <<pipeline.trigger_parameters.github_app.repo_url>>"
             echo "TOKEN: ${MERGIFY_CI_ISSUES_TOKEN}"
             echo $MERGIFY_CI_ISSUES_TOKEN
@@ -52,9 +52,9 @@ jobs:
             poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
 #          token: <<pipeline.parameters.MERGIFY_CI_ISSUES_TOKEN>>
-          token: $MERGIFY_CI_ISSUES_TOKEN
+          token: MERGIFY_CI_ISSUES_TOKEN
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
-          job_name: $JOB_NAME
+          job_name: CIRCLE_JOB
 #          job_name: <<pipeline.parameters.CIRCLE_JOB>>
           report_paths: test_results/report.xml
 
@@ -93,7 +93,7 @@ workflows:
       - run_tests:
           actor: lecrepont01
           context:
-            - test_context
+#            - test_context
             - ci_secrets
 
 #      - display_tests_report:
