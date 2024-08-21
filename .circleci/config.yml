@@ -44,11 +44,17 @@ jobs:
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
+      - run:
+          name: Setup BASH_ENV
+          description: A workaround to make secrets/env available to Orb
+          command: |
+            echo 'export MERGIFY_CI_ISSUES_TOKEN="${MERGIFY_CI_ISSUES_TOKEN}"' >> $BASH_ENV
+            echo 'export JOB_NAME="${CIRCLE_JOB}"' >> $BASH_ENV
       - mergifyio/upload:
 #          token: <<pipeline.parameters.MERGIFY_CI_ISSUES_TOKEN>>
           token: $MERGIFY_CI_ISSUES_TOKEN
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
-          job_name: $CIRCLE_JOB
+          job_name: $JOB_NAME
 #          job_name: <<pipeline.parameters.CIRCLE_JOB>>
           report_paths: test_results/report.xml
 
