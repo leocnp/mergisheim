@@ -43,9 +43,9 @@ jobs:
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
-          token: ${MERGIFY_CI_ISSUES_TOKEN}
+          token: <<pipeline.parameters.MERGIFY_CI_ISSUES_TOKEN>>
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
-          job_name: ${CIRCLE_JOB}
+          job_name: <<pipeline.parameters.CIRCLE_JOB>>
           report_paths: test_results/report.xml
 
       # NOTE: use as a step or in a separate job (share report in workspace in that case)
