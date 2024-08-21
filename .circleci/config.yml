@@ -33,6 +33,7 @@ jobs:
             echo "Repo name: ${CIRCLE_PROJECT_REPONAME}"
             echo "A secret from my test_context: ${MERGISHEIM_YOLO}"
             echo "Repository URL <<pipeline.trigger_parameters.github_app.repo_url>>"
+            echo "TOKEN: ${MERGIFY_CI_ISSUES_TOKEN}"
       - run:
           name: Run tests
           command: |
