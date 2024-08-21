@@ -36,8 +36,8 @@ jobs:
           description: A workaround to make secrets/env available to Orb
           command: |
             set -x
-            echo 'export MERGIFY_CI_ISSUES_TOKEN="${MERGIFY_CI_ISSUES_TOKEN}"' >> $BASH_ENV
-            echo 'export JOB_NAME="${CIRCLE_JOB}"' >> $BASH_ENV
+            echo "export MERGIFY_CI_ISSUES_TOKEN=${MERGIFY_CI_ISSUES_TOKEN}" >> $BASH_ENV
+            echo "export JOB_NAME=${CIRCLE_JOB}" >> $BASH_ENV
             cat $BASH_ENV
       - run:
           name: Run tests
