@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.1.1
-#  mergisheim: krepon/mergisheim@0.0.2
   mergifyio: mergifyio/ci-issues@dev:test_version
 
 jobs:
@@ -14,16 +13,10 @@ jobs:
       actor:
         type: string
         default: krepon
-#      mergify_ci_issues_token:
-#        type: string
-#        default: $MERGIFY_CI_ISSUES_TOKEN
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: poetry
-#      - mergisheim/greet:
-#          # my personnal test orb
-#          to: LECREPONT01
       - run:
           name: Echo test some parameters
           environment:
@@ -35,27 +28,24 @@ jobs:
             echo "Head SHA: ${HEAD_SHA}"
             echo "Head SHA from env var: ${CIRCLE_SHA1}"
             echo "Repo name: ${CIRCLE_PROJECT_REPONAME}"
-#            echo "A secret from my test_context: ${MERGISHEIM_YOLO}"
             echo "Repository URL <<pipeline.trigger_parameters.github_app.repo_url>>"
             echo "TOKEN: ${MERGIFY_CI_ISSUES_TOKEN}"
             echo $MERGIFY_CI_ISSUES_TOKEN
-      - run:
-          name: Setup BASH_ENV
-          description: A workaround to make secrets/env available to Orb
-          command: |
-            echo 'export MERGIFY_CI_ISSUES_TOKEN="${MERGIFY_CI_ISSUES_TOKEN}"' >> $BASH_ENV
-            echo 'export JOB_NAME="${CIRCLE_JOB}"' >> $BASH_ENV
+#      - run:
+#          name: Setup BASH_ENV
+#          description: A workaround to make secrets/env available to Orb
+#          command: |
+#            echo 'export MERGIFY_CI_ISSUES_TOKEN="${MERGIFY_CI_ISSUES_TOKEN}"' >> $BASH_ENV
+#            echo 'export JOB_NAME="${CIRCLE_JOB}"' >> $BASH_ENV
       - run:
           name: Run tests
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
-#          token: <<pipeline.parameters.MERGIFY_CI_ISSUES_TOKEN>>
           token: MERGIFY_CI_ISSUES_TOKEN
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
           job_name: CIRCLE_JOB
-#          job_name: <<pipeline.parameters.CIRCLE_JOB>>
           report_paths: test_results/report.xml
 
       # NOTE: use as a step or in a separate job (share report in workspace in that case)
