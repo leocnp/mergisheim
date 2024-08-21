@@ -31,27 +31,25 @@ jobs:
             echo "Repository URL <<pipeline.trigger_parameters.github_app.repo_url>>"
             echo "TOKEN: ${MERGIFY_CI_ISSUES_TOKEN}"
             echo $MERGIFY_CI_ISSUES_TOKEN
-#      - run:
-#          name: Setup BASH_ENV
-#          description: A workaround to make secrets/env available to Orb
-#          command: |
-#            echo 'export MERGIFY_CI_ISSUES_TOKEN="${MERGIFY_CI_ISSUES_TOKEN}"' >> $BASH_ENV
-#            echo 'export JOB_NAME="${CIRCLE_JOB}"' >> $BASH_ENV
       - run:
           name: Run tests
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
+      - run:
+          name: Setup BASH_ENV
+          description: A workaround to make secrets/env available to Orb
+          command: |
+            set -x
+            echo 'export MERGIFY_CI_ISSUES_TOKEN="${MERGIFY_CI_ISSUES_TOKEN}"' >> $BASH_ENV
+            echo 'export JOB_NAME="${CIRCLE_JOB}"' >> $BASH_ENV
+            cat $BASH_ENV
       - mergifyio/upload:
-          token: MERGIFY_CI_ISSUES_TOKEN
+          token: $MERGIFY_CI_ISSUES_TOKEN
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
-          job_name: CIRCLE_JOB
+          job_name: $CIRCLE_JOB
           report_paths: test_results/report.xml
 
-      # NOTE: use as a step or in a separate job (share report in workspace in that case)
-      # - mergify/ci_issues
-      #     path: test_results/report.xml
-      #     auth_token: ...
 
       - persist_to_workspace:
           # test usage of workspace sharing
@@ -83,7 +81,6 @@ workflows:
       - run_tests:
           actor: lecrepont01
           context:
-#            - test_context
             - ci_secrets
 
 #      - display_tests_report:
