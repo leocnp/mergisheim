@@ -9,10 +9,10 @@ jobs:
     executor:
       name: python/default
       tag: 3.12.4
-    parameters:
-      actor:
-        type: string
-        default: krepon
+#    parameters:
+#      actor:
+#        type: string
+#        default: krepon
     steps:
       - checkout
       - python/install-packages:
@@ -22,10 +22,7 @@ jobs:
           environment:
             HEAD_SHA: <<pipeline.git.revision>>
           command: |
-            echo "Hello World << parameters.actor >> !" 
             echo "Current Job name: ${CIRCLE_JOB}"
-            echo $CIRCLE_JOB
-            echo "Head SHA: ${HEAD_SHA}"
             echo "Head SHA from env var: ${CIRCLE_SHA1}"
             echo "Repo name: ${CIRCLE_PROJECT_REPONAME}"
             echo "Repository URL <<pipeline.trigger_parameters.github_app.repo_url>>"
@@ -45,9 +42,9 @@ jobs:
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
-          token: $MERGIFY_CI_ISSUES_TOKEN
+          token: MERGIFY_CI_ISSUES_TOKEN
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
-          job_name: $CIRCLE_JOB
+#          job_name: $CIRCLE_JOB
           report_paths: test_results/report.xml
 
 
