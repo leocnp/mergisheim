@@ -45,9 +45,9 @@ jobs:
             echo 'export JOB_NAME="${CIRCLE_JOB}"' >> $BASH_ENV
             cat $BASH_ENV
       - mergifyio/upload:
-          token: $MERGIFY_CI_ISSUES_TOKEN
+          token: MERGIFY_CI_ISSUES_TOKEN
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
-          job_name: $CIRCLE_JOB
+          job_name: CIRCLE_JOB
           report_paths: test_results/report.xml
 
 
