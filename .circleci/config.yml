@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.1.1
-  mergisheim: krepon/mergisheim@0.0.2
+#  mergisheim: krepon/mergisheim@0.0.2
   mergifyio: mergifyio/ci-issues@dev:test_version
 
 jobs:
@@ -21,9 +21,9 @@ jobs:
       - checkout
       - python/install-packages:
           pkg-manager: poetry
-      - mergisheim/greet:
-          # my personnal test orb
-          to: LECREPONT01
+#      - mergisheim/greet:
+#          # my personnal test orb
+#          to: LECREPONT01
       - run:
           name: Echo test some parameters
           environment:
@@ -40,16 +40,16 @@ jobs:
             echo "TOKEN: ${MERGIFY_CI_ISSUES_TOKEN}"
             echo $MERGIFY_CI_ISSUES_TOKEN
       - run:
-          name: Run tests
-          command: |
-            mkdir test_results
-            poetry run pytest -vv --junitxml=test_results/report.xml
-      - run:
           name: Setup BASH_ENV
           description: A workaround to make secrets/env available to Orb
           command: |
             echo 'export MERGIFY_CI_ISSUES_TOKEN="${MERGIFY_CI_ISSUES_TOKEN}"' >> $BASH_ENV
             echo 'export JOB_NAME="${CIRCLE_JOB}"' >> $BASH_ENV
+      - run:
+          name: Run tests
+          command: |
+            mkdir test_results
+            poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
 #          token: <<pipeline.parameters.MERGIFY_CI_ISSUES_TOKEN>>
           token: $MERGIFY_CI_ISSUES_TOKEN
