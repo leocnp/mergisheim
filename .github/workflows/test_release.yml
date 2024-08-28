@@ -13,8 +13,18 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4.1.7
 
-      # TODO: test secrets with a circle ci promote
-      - name: Echo Release version
+      - name: Get CircleCI Increment from tag
+        # CircleCI only let us promote with patch, minor or major command argument
+        id: circleci_increment
         run: |
-          echo "Tag version: ${{ github.ref }}"
-          echo "Tag version name: ${{ github.ref_name }}"
+          if [[ ${{ github.ref_name }} =~ [0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}\-(patch|minor|major) ]]; then
+            echo "CIRCLECI_INCREMENT_ARG=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          else
+            echo "Invalid tag: ${{ github.ref_name }}, expected <semver>-<patch|minor|major>"
+            exit 1
+          fi
+
+      # TODO: test secrets with a circle ci promote
+      - name: Echo Increment from previous step
+        run: |
+          echo "Tag version name: ${{ steps.circleci_increment.outputs.CIRCLECI_INCREMENT_ARG }}"
