@@ -1,0 +1,20 @@
+name: Test release trigger
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  release:
+    timeout-minutes: 5
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4.1.7
+
+      # TODO: test secrets with a circle ci promote
+      - name: Echo Release version
+        run: |
+          echo "Tag version: ${{ github.ref }}"
+          echo "Tag version name: ${{ github.ref_name }}"
