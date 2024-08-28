@@ -9,33 +9,10 @@ jobs:
     executor:
       name: python/default
       tag: 3.12.4
-#    parameters:
-#      actor:
-#        type: string
-#        default: krepon
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: poetry
-      - run:
-          name: Echo test some parameters
-          environment:
-            HEAD_SHA: <<pipeline.git.revision>>
-          command: |
-            echo "Current Job name: ${CIRCLE_JOB}"
-            echo "Head SHA from env var: ${CIRCLE_SHA1}"
-            echo "Repo name: ${CIRCLE_PROJECT_REPONAME}"
-            echo "Repository URL <<pipeline.trigger_parameters.github_app.repo_url>>"
-            echo "TOKEN: ${MERGIFY_CI_ISSUES_TOKEN}"
-            echo $MERGIFY_CI_ISSUES_TOKEN
-      - run:
-          name: Setup BASH_ENV
-          description: A workaround to make secrets/env available to Orb
-          command: |
-            set -x
-            echo "export MERGIFY_CI_ISSUES_TOKEN=${MERGIFY_CI_ISSUES_TOKEN}" >> $BASH_ENV
-            echo "export JOB_NAME=${CIRCLE_JOB}" >> $BASH_ENV
-            cat $BASH_ENV
       - run:
           name: Run tests
           command: |
@@ -44,42 +21,13 @@ jobs:
       - mergifyio/upload:
           token: MERGIFY_CI_ISSUES_TOKEN
           repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
-#          job_name: $CIRCLE_JOB
           report_paths: test_results/report.xml
-
-
-      - persist_to_workspace:
-          # test usage of workspace sharing
-          root: test_results
-          paths:
-            - report.xml
-
       - store_test_results:
           path: test_results
 
-  # A separate job to illustrate the persist workspace usage
-#  display_tests_report:
-#    docker:
-#      - image: alpine:latest
-#    steps:
-#      - attach_workspace:
-#          at: /tmp/workspace
-#      - run:
-#          name: Display reports
-#          command: |
-#            echo "Showing test results:\n"
-#            cat /tmp/workspace/report.xml
-
-
 workflows:
-  # each workflow has a workspace
   continuous_integration:
     jobs:
       - run_tests:
           context:
             - ci_secrets
-
-#          actor: lecrepont01
-#      - display_tests_report:
-#          requires:
-#            - run_tests
