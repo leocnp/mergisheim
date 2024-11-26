@@ -1,8 +1,9 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@2.1.1
-  mergifyio: mergifyio/ci-issues@0.0.2
+  python: circleci/python@2.2.0
+#  mergifyio: mergifyio/ci-issues@0.0.2
+  mergifyio: mergifyio/ci-issues@dev:test_version
 
 jobs:
   run_tests:
@@ -19,8 +20,6 @@ jobs:
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
-          token: MERGIFY_CI_ISSUES_TOKEN
-          repository_url: <<pipeline.trigger_parameters.github_app.repo_url>>
           report_paths: test_results/report.xml
       - store_test_results:
           path: test_results
