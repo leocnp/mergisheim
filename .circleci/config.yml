@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.2.0
-#  mergifyio: mergifyio/ci-issues@0.0.2
   mergifyio: mergifyio/ci-issues@dev:test_version
 
 jobs:
