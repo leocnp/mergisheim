@@ -1,15 +1,15 @@
 queue_rules:
-    - name: highprio
-      queue_conditions:
-        - label=high
+  - name: highprio
+    queue_conditions:
+      - label=high
 
-    - name: default
-      queue_conditions:
-        - label=default
+  - name: default
+    queue_conditions:
+      - label=default
 
-    - name: lowprio
-      queue_conditions:
-        - label=low
+  - name: lowprio
+    queue_conditions:
+      - label=low
 
 pull_request_rules:
 
@@ -52,3 +52,12 @@ pull_request_rules:
                 head-repo: "{{ head_repo_full_name }}"
                 head-branch: "{{ head }}"
                 base-branch: main
+priority_rules:
+  - name: priority for queue `highprio`
+    conditions:
+      - label=high
+    priority: 2500
+  - name: priority for queue `default`
+    conditions:
+      - label=default
+    priority: 2250
