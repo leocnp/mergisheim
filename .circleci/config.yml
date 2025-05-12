@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@2.2.0
+  python: circleci/python@2.1.1
   mergifyio: mergifyio/ci-issues@dev:test_version
 
 jobs:
@@ -9,16 +9,45 @@ jobs:
     executor:
       name: python/default
       tag: 3.12.4
+    environment:
+      CIRCLE_REPOSITORY_URL_PP: << pipeline.trigger_parameters.github_app.repo_url >>
+#      CIRCLE_PULL_REQUEST_PP: << pipeline. >>
+#      CIRCLE_PULL_REQUESTS_PP: << pipeline. >>
+      CIRCLE_PROJECT_REPONAME_PP: << pipeline.trigger_parameters.github_app.repo_name >>
+      CIRCLE_PROJECT_USERNAME_PP: << pipeline.trigger_parameters.github_app.user_name >>
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: poetry
+      - run:
+          name: Echo Env Variables
+          when: always
+          command: |
+            echo "----"
+            
+            echo "HERE CIRCLE_REPOSITORY_URL=${CIRCLE_REPOSITORY_URL}"
+            
+            echo "HERE CIRCLE_PULL_REQUEST=${CIRCLE_PULL_REQUEST}"
+            
+            echo "HERE CIRCLE_PULL_REQUESTS=${CIRCLE_PULL_REQUESTS}"
+            
+            echo "HERE CIRCLE_PROJECT_REPONAME=${CIRCLE_PROJECT_REPONAME}"
+            
+            echo "HERE CIRCLE_PROJECT_USERNAME=${CIRCLE_PROJECT_USERNAME}"
+            
+            echo "HERE CIRCLE_REPOSITORY_URL_PP=${CIRCLE_REPOSITORY_URL_PP}"
+            echo "HERE CIRCLE_PULL_REQUEST_PP=${CIRCLE_PULL_REQUEST_PP}"
+            echo "HERE CIRCLE_PULL_REQUESTS_PP=${CIRCLE_PULL_REQUESTS_PP}"
+            echo "HERE CIRCLE_PROJECT_REPONAME_PP=${CIRCLE_PROJECT_REPONAME_PP}"
+            echo "HERE CIRCLE_PROJECT_USERNAME_PP=${CIRCLE_PROJECT_USERNAME_PP}"
+
       - run:
           name: Run tests
           command: |
             mkdir test_results
             poetry run pytest -vv --junitxml=test_results/report.xml
       - mergifyio/upload:
+          token: MERGIFY_CI_ISSUES_TOKEN
           report_paths: test_results/report.xml
       - store_test_results:
           path: test_results
